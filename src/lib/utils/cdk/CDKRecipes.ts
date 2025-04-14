@@ -5,7 +5,7 @@ import * as s3 from "aws-cdk-lib/aws-s3"
 export class CDKRecipes {
   constructor() {}
 
-  s3Bucket(scope: Construct, id: string, props: S3BucketProps) {
+  s3Bucket(scope: Construct, id: string, props: S3BucketProps): s3.IBucket {
     const {name, isPublic, isHostable, removePolicy} = props
     const access = isPublic
       ? {

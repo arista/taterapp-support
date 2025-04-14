@@ -2,7 +2,6 @@ import { IConstruct, Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
-import * as cdk from 'aws-cdk-lib';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
 declare function appPkgDir(importMetaUrl: string): string;
@@ -74,10 +73,8 @@ declare class CDKResourcesUtils {
     get ssmStringParams(): CachedResources<string>;
     _ssmSecureStringParams: CachedResources<string> | null;
     get ssmSecureStringParams(): CachedResources<string>;
-    get artifactBucketName(): string;
-    get codestarConnectionArn(): string;
-    get dockerhubAccountId(): string;
-    get dockerhubAccountPassword(): string;
+    _s3Buckets: CachedResources<s3.IBucket> | null;
+    get buckets(): CachedResources<s3.IBucket>;
 }
 declare class CachedResources<T> {
     createFunc: (name: string) => T;
@@ -90,7 +87,7 @@ declare class CachedResources<T> {
 
 declare class CDKRecipes {
     constructor();
-    s3Bucket(scope: Construct, id: string, props: S3BucketProps): cdk.aws_s3.Bucket;
+    s3Bucket(scope: Construct, id: string, props: S3BucketProps): s3.IBucket;
 }
 type S3BucketProps = {
     name: string;

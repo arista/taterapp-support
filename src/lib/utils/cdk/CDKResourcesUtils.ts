@@ -1,5 +1,6 @@
 import {IConstruct} from "constructs"
 import * as ssm from "aws-cdk-lib/aws-ssm"
+import * as s3 from "aws-cdk-lib/aws-s3"
 import * as cdk from "aws-cdk-lib"
 
 export class CDKResourcesUtils {
@@ -38,37 +39,13 @@ export class CDKResourcesUtils {
     })())
   }
 
-  // Returns the token corresponding to the name of the S3 bucket used
-  // to hold codepipeline artifacts
-  get artifactBucketName() {
-    return this.ssmStringParams.get(
-      "/taterapps/common/build/artifact-bucket-name"
-    )
-  }
-
-  // Returns the token corresponding to the codeconnection arn used to
-  // interact with github
-  get codestarConnectionArn() {
-    return this.ssmStringParams.get(
-      "/taterapps/common/build/codestar-connection-arn"
-    )
-  }
-
-  // Returns the token corresponding to the dockerhub login used to
-  // pull base images when building docker images.  Using a login
-  // helps with the dockerhub rate limits.
-  get dockerhubAccountId() {
-    return this.ssmStringParams.get(
-      "/taterapps/common/build/dockerhub-account/id"
-    )
-  }
-
-  // Returns the token corresponding to the dockerhub password for the
-  // dockerhubAccountId
-  get dockerhubAccountPassword() {
-    return this.ssmSecureStringParams.get(
-      "/taterapps/common/build/dockerhub-account/password"
-    )
+  _s3Buckets: CachedResources<s3.IBucket> | null = null
+  get buckets(): CachedResources<s3.IBucket> {
+    return (this._s3Buckets ||= (() => {
+      return new CachedResources((name) => {
+        return s3.Bucket.fromBucketName(this.scope, `bucket-${name}`, name)
+      })
+    })())
   }
 }
 
