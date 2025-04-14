@@ -8,7 +8,7 @@
   "module": "dist/lib/lib.es.js",
   "types": "dist/lib/lib.d.ts",
   "files": [
-    "build/dist/lib"
+    "dist"
   ],
   "type": "module",
   "oclif": {
