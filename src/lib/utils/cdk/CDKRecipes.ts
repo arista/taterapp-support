@@ -4,29 +4,32 @@ import * as s3 from "aws-cdk-lib/aws-s3"
 
 export class CDKRecipes {
   constructor() {}
-  
+
   s3Bucket(scope: Construct, id: string, props: S3BucketProps) {
     const {name, isPublic, isHostable, removePolicy} = props
-    const access = isPublic ? {
-      publicReadAccess: true,
-      blockPublicAccess: new s3.BlockPublicAccess({
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      }),
-    }: {
-      publicReadAccess: false, 
-    }
+    const access = isPublic
+      ? {
+          publicReadAccess: true,
+          blockPublicAccess: new s3.BlockPublicAccess({
+            blockPublicAcls: false,
+            blockPublicPolicy: false,
+            ignorePublicAcls: false,
+            restrictPublicBuckets: false,
+          }),
+        }
+      : {
+          publicReadAccess: false,
+        }
 
-    const hostable = isHostable ? {
-      // This is apparently how you do s3 http hosting
-      websiteIndexDocument: 'index.html',
-    }: {
-    }
+    const hostable = isHostable
+      ? {
+          // This is apparently how you do s3 http hosting
+          websiteIndexDocument: "index.html",
+        }
+      : {}
 
-    const removal = (()=>{
-      switch(removePolicy) {
+    const removal = (() => {
+      switch (removePolicy) {
         case "no-delete":
           return {}
         case "delete-if-empty":
@@ -42,7 +45,7 @@ export class CDKRecipes {
           return {}
       }
     })()
-    
+
     return new s3.Bucket(scope, id, {
       bucketName: name,
       ...access,
@@ -63,8 +66,8 @@ export type S3BucketProps = {
 
 export type S3BucketRemovePolicy =
   // Do not remove the bucket when it's removed from the stack
-  "no-delete"
-// Only remove the bucket if it's empty
+  | "no-delete"
+  // Only remove the bucket if it's empty
   | "delete-if-empty"
-// Empty out the bucket and remove it
+  // Empty out the bucket and remove it
   | "empty-and-delete"

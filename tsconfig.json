@@ -32,7 +32,5 @@
     "isolatedModules": true
   },
   "files": [],
-  "references": [
-    {"path": "./tsconfig.app.json"},
-  ]
+  "references": [{"path": "./tsconfig.app.json"}]
 }
