@@ -32,21 +32,22 @@ export class CDKUtils {
   }
 
   static async runCDKCommand<P extends Object>({
+    appPkgDir,
     appClass,
     cdkCommand,
     stackProps,
   }: {
+    appPkgDir: string
     appClass: string
     cdkCommand: string
     stackProps: P
   }): Promise<void> {
     // This assumes that all the devops-utils code has been rolled up
     // into build/rollup/index.cjs
-    const pkgdir = Utils.getPackageDirectory()
-    const nodeFile = `${pkgdir}/dist/lib/lib.es.js`
+    const nodeFile = `${appPkgDir}/dist/lib/lib.es.js`
     const nodeCommand = `node -e "import('${nodeFile}').then(i=>i.${appClass}.runCDKStack())"`
     const timestamp = Utils.dateToYYYYMMDDHHMMSS()
-    const cdkOutputDir = `${pkgdir}/build/cdk.out/${appClass}/${timestamp}`
+    const cdkOutputDir = `${appPkgDir}/build/cdk.out/${appClass}/${timestamp}`
 
     const command = "npx"
     const shell = false
@@ -74,7 +75,7 @@ export class CDKUtils {
       args,
       env,
       shell,
-      cwd: pkgdir,
+      cwd: appPkgDir,
     })
   }
 

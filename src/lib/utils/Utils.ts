@@ -14,8 +14,10 @@ export function notNull<T>(val: T | null | undefined, str?: string): T {
   return val
 }
 
-export function getPackageDirectory(): string {
-  const __filename = url.fileURLToPath(import.meta.url)
+// Returns the package directory for the file with the given
+// import.meta.url
+export function appPkgDir(importMetaUrl: string): string {
+  const __filename = url.fileURLToPath(importMetaUrl)
   return notNull(packageDirectorySync({cwd: __filename}))
 }
 

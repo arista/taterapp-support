@@ -4,7 +4,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
-declare function getPackageDirectory(): string;
+declare function appPkgDir(importMetaUrl: string): string;
 declare function mapWithIndex<T, R>(items: Iterable<T>, f: (item: T, index: number) => R): Array<R>;
 declare function runShellCommand({ command, args, cwd, env, shell, }: {
     command: string;
@@ -20,20 +20,20 @@ declare function fileLastModified(path: string): number;
 declare function dateToYYYYMMDDHHMMSS(d?: Date): string;
 declare function getPathToRoot(path: string): string;
 
+declare const Utils_d_appPkgDir: typeof appPkgDir;
 declare const Utils_d_dateToYYYYMMDDHHMMSS: typeof dateToYYYYMMDDHHMMSS;
 declare const Utils_d_fileExists: typeof fileExists;
 declare const Utils_d_fileLastModified: typeof fileLastModified;
-declare const Utils_d_getPackageDirectory: typeof getPackageDirectory;
 declare const Utils_d_getPathToRoot: typeof getPathToRoot;
 declare const Utils_d_mapWithIndex: typeof mapWithIndex;
 declare const Utils_d_notNull: typeof notNull;
 declare const Utils_d_runShellCommand: typeof runShellCommand;
 declare namespace Utils_d {
   export {
+    Utils_d_appPkgDir as appPkgDir,
     Utils_d_dateToYYYYMMDDHHMMSS as dateToYYYYMMDDHHMMSS,
     Utils_d_fileExists as fileExists,
     Utils_d_fileLastModified as fileLastModified,
-    Utils_d_getPackageDirectory as getPackageDirectory,
     Utils_d_getPathToRoot as getPathToRoot,
     Utils_d_mapWithIndex as mapWithIndex,
     Utils_d_notNull as notNull,
@@ -99,7 +99,8 @@ declare class CDKUtils {
     get permissions(): CDKPermissionsUtils;
     _resources: CDKResourcesUtils | null;
     get resources(): CDKResourcesUtils;
-    static runCDKCommand<P extends Object>({ appClass, cdkCommand, stackProps, }: {
+    static runCDKCommand<P extends Object>({ appPkgDir, appClass, cdkCommand, stackProps, }: {
+        appPkgDir: string;
         appClass: string;
         cdkCommand: string;
         stackProps: P;

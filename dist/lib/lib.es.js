@@ -7,10 +7,10 @@ var __export = (target, all) => {
 // src/lib/utils/Utils.ts
 var Utils_exports = {};
 __export(Utils_exports, {
+  appPkgDir: () => appPkgDir,
   dateToYYYYMMDDHHMMSS: () => dateToYYYYMMDDHHMMSS,
   fileExists: () => fileExists,
   fileLastModified: () => fileLastModified,
-  getPackageDirectory: () => getPackageDirectory,
   getPathToRoot: () => getPathToRoot,
   mapWithIndex: () => mapWithIndex,
   notNull: () => notNull,
@@ -30,8 +30,8 @@ function notNull(val, str) {
   }
   return val;
 }
-function getPackageDirectory() {
-  const __filename = url.fileURLToPath(import.meta.url);
+function appPkgDir(importMetaUrl) {
+  const __filename = url.fileURLToPath(importMetaUrl);
   return notNull(packageDirectorySync({ cwd: __filename }));
 }
 function mapWithIndex(items, f) {
@@ -347,15 +347,15 @@ var CDKUtils = class {
     })();
   }
   static async runCDKCommand({
+    appPkgDir: appPkgDir2,
     appClass,
     cdkCommand,
     stackProps
   }) {
-    const pkgdir = getPackageDirectory();
-    const nodeFile = `${pkgdir}/dist/lib/lib.es.js`;
+    const nodeFile = `${appPkgDir2}/dist/lib/lib.es.js`;
     const nodeCommand = `node -e "import('${nodeFile}').then(i=>i.${appClass}.runCDKStack())"`;
     const timestamp = dateToYYYYMMDDHHMMSS();
-    const cdkOutputDir = `${pkgdir}/build/cdk.out/${appClass}/${timestamp}`;
+    const cdkOutputDir = `${appPkgDir2}/build/cdk.out/${appClass}/${timestamp}`;
     const command = "npx";
     const shell = false;
     const stackPropsJson = JSON.stringify(stackProps);
@@ -375,7 +375,7 @@ var CDKUtils = class {
       args,
       env,
       shell,
-      cwd: pkgdir
+      cwd: appPkgDir2
     });
   }
   static runCDKStack({
