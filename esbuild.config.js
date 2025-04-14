@@ -5,7 +5,6 @@ import * as esbuild from "esbuild"
 
 const builds = [
   {in: "src/lib.ts", out: "dist/lib/lib.es.js", format: "esm"},
-  {in: "src/cli/cli.ts", out: "dist/cli/cli.es.js", format: "esm"},
   {in: "test/tests.ts", out: "build/test/tests.es.js", format: "esm"},
 ]
 

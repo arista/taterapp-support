@@ -1,7 +1,7 @@
 {
   "name": "taterapp-support",
   "version": "0.0.0",
-  "description": "TaterApp support utilities and AWS infrastructure",
+  "description": "TaterApp support libraries",
   "license": "MIT",
   "author": "Nathan Abramson",
   "private": false,
@@ -11,20 +11,6 @@
     "dist"
   ],
   "type": "module",
-  "oclif": {
-    "bin": "taterapp-support",
-    "commands": {
-      "strategy": "explicit",
-      "target": "./dist/cli/cli.es.js",
-      "identifier": "COMMANDS"
-    },
-    "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-not-found",
-      "@oclif/plugin-autocomplete"
-    ],
-    "topicSeparator": " "
-  },
   "scripts": {
     "lint": "eslint .",
     "tsc": "npx tsc -b",
@@ -39,44 +25,48 @@
     "prettier": "npx prettier --write **/*.{ts,tsx,css,scss,html,json,js}"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
+    "pkg-dir": "^8.0.0"
+  },
+  "peerDependencies": {
     "aws-cdk-lib": "^2.189.0",
-    "concurrently": "^9.1.2",
     "express": "^5.1.0",
-    "live-value": "^0.0.7",
-    "nodemon": "^3.1.9",
-    "oclif": "^4.17.44",
-    "path-to-regexp": "^8.2.0",
-    "pkg-dir": "^8.0.0",
-    "prettier": "^3.5.3",
-    "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "short-uuid": "^5.2.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-error-boundary": "^5.0.0",
-    "zod": "^3.24.2"
+    "react-dom": "^19.1.0"
+  },
+  "peerDependenciesMeta": {
+    "aws-cdk-lib": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "express": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
-    "@oclif/core": "^4.2.10",
-    "@oclif/plugin-autocomplete": "^3.2.27",
-    "@oclif/plugin-help": "^6.2.27",
-    "@oclif/plugin-not-found": "^3.2.49",
-    "@tailwindcss/vite": "^4.1.3",
-    "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
-    "@types/react": "^19.1.1",
+    "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "aws-cdk-lib": "^2.189.1",
+    "concurrently": "^9.1.2",
     "esbuild": "^0.25.2",
     "eslint": "^9.24.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "express": "^5.1.0",
     "globals": "^16.0.0",
-    "react-router-dom": "^7.5.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rollup": "^4.40.0",
     "rollup-plugin-dts": "^6.2.1",
-    "tailwindcss": "^4.1.3",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.29.1"
+    "typescript-eslint": "^8.30.0"
   }
 }
