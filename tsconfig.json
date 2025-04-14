@@ -1,0 +1,38 @@
+// The base tsconfig.json, defining path aliases and linting features.
+// The actual typechecking projects are specified as references
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@lib/*": ["./src/lib/*"],
+      "@api/*": ["./src/api/*"],
+      "@backend/*": ["./src/backend/*"],
+      "@localserver/*": ["./src/localserver/*"],
+      "@cli/*": ["./src/cli/*"],
+      "@webapp/*": ["./src/webapp/*"],
+      "@images/*": ["./src/webapp/assets/images/*"],
+      "@styles/*": ["./src/webapp/assets/styles/*"],
+      "@routes/*": ["./src/webapp/routes/*"],
+      "@components/*": ["./src/webapp/components/*"],
+      "@test/*": ["./test/*"]
+    },
+
+    // linting features
+    "strict": true,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "isolatedModules": true
+  },
+  "files": [],
+  "references": [
+    {"path": "./tsconfig.app.json"},
+  ]
+}

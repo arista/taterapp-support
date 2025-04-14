@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Update all of the packages in package.json to the latest versions
+
+# Fail on command failure, undefined variables, and piped command
+# failures, get the package directory
+set -euo pipefail
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+PKGDIR=${DIR}/../../
+
+cd ${PKGDIR}
+npx -y npm-check-updates -u

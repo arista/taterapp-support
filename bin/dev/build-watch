@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Fail on command failure, undefined variables, and piped command
+# failures, get the package directory
+set -euo pipefail
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+PKGDIR=${DIR}/../../
+
+# Directly execute modules instead of using npm, which doesn't handle
+# signals well and isn't intended for use with process managers
+# (https://stackoverflow.com/questions/61418014/controlling-unix-ipc-signals-in-npm-scripts)
+#
+# See build for the purpose of the running scripts.
+# local-server-watch runs the api server that runs in tandem with the
+# vite webapp dev server
+cd ${PKGDIR}
+exec node_modules/.bin/concurrently \
+npm:tsc-watch \
+npm:rollup-watch \
+npm:esbuild-watch \
+
