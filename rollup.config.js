@@ -24,7 +24,6 @@ export default [
     },
     plugins: [
       dts({
-        respectExternal: true,
         compilerOptions: {
           baseUrl: "./build/tsc",
           paths: getTsconfig().compilerOptions.paths,
