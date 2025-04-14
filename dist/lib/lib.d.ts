@@ -1,7 +1,8 @@
-import { IConstruct } from 'constructs';
+import { IConstruct, Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
+import * as cdk from 'aws-cdk-lib';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
 declare function appPkgDir(importMetaUrl: string): string;
@@ -87,6 +88,18 @@ declare class CachedResources<T> {
     get(name: string): T;
 }
 
+declare class CDKRecipes {
+    constructor();
+    s3Bucket(scope: Construct, id: string, props: S3BucketProps): cdk.aws_s3.Bucket;
+}
+type S3BucketProps = {
+    name: string;
+    isPublic?: boolean;
+    isHostable?: boolean;
+    removePolicy?: S3BucketRemovePolicy;
+};
+type S3BucketRemovePolicy = "no-delete" | "delete-if-empty" | "empty-and-delete";
+
 declare class CDKUtils {
     props: {
         scope: IConstruct;
@@ -99,6 +112,8 @@ declare class CDKUtils {
     get permissions(): CDKPermissionsUtils;
     _resources: CDKResourcesUtils | null;
     get resources(): CDKResourcesUtils;
+    _recipes: CDKRecipes | null;
+    get recipes(): CDKRecipes;
     static runCDKCommand<P extends Object>({ appPkgDir, appClass, cdkCommand, stackProps, }: {
         appPkgDir: string;
         appClass: string;

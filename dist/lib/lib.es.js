@@ -108,7 +108,7 @@ function getPathToRoot(path) {
 }
 
 // src/lib/utils/cdk/CDKUtils.ts
-import * as cdk from "aws-cdk-lib";
+import * as cdk2 from "aws-cdk-lib";
 
 // src/lib/utils/cdk/CDKPermissionsUtils.ts
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -324,6 +324,55 @@ var CachedResources = class {
   }
 };
 
+// src/lib/utils/cdk/CDKRecipes.ts
+import * as cdk from "aws-cdk-lib";
+import * as s3 from "aws-cdk-lib/aws-s3";
+var CDKRecipes = class {
+  constructor() {
+  }
+  s3Bucket(scope, id, props) {
+    const { name, isPublic, isHostable, removePolicy } = props;
+    const access = isPublic ? {
+      publicReadAccess: true,
+      blockPublicAccess: new s3.BlockPublicAccess({
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false
+      })
+    } : {
+      publicReadAccess: false
+    };
+    const hostable = isHostable ? {
+      // This is apparently how you do s3 http hosting
+      websiteIndexDocument: "index.html"
+    } : {};
+    const removal = (() => {
+      switch (removePolicy) {
+        case "no-delete":
+          return {};
+        case "delete-if-empty":
+          return {
+            removalPolicy: cdk.RemovalPolicy.DESTROY
+          };
+        case "empty-and-delete":
+          return {
+            removalPolicy: cdk.RemovalPolicy.DESTROY,
+            autoDeleteObjects: true
+          };
+        default:
+          return {};
+      }
+    })();
+    return new s3.Bucket(scope, id, {
+      bucketName: name,
+      ...access,
+      ...hostable,
+      ...removal
+    });
+  }
+};
+
 // src/lib/utils/cdk/CDKUtils.ts
 var CDKUtils = class {
   constructor(props) {
@@ -344,6 +393,12 @@ var CDKUtils = class {
       return new CDKResourcesUtils({
         scope: this.scope
       });
+    })();
+  }
+  _recipes = null;
+  get recipes() {
+    return this._recipes ||= (() => {
+      return new CDKRecipes();
     })();
   }
   static async runCDKCommand({
@@ -385,8 +440,8 @@ var CDKUtils = class {
     const env = JSON.parse(notNull(process.env["CDK_PROPS"]));
     const stackProps = env;
     const stackName = getStackName({ stackProps });
-    const app = new cdk.App();
-    const stack = new cdk.Stack(app, stackName, {
+    const app = new cdk2.App();
+    const stack = new cdk2.Stack(app, stackName, {
       // This enables things like looking up hostnames.  Note that
       // these don't have to be defined as environment variables - CDK
       // will figure them out itself based on the AWS configuration

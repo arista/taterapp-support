@@ -1,8 +1,9 @@
-import {IConstruct} from "constructs"
+import {Construct, IConstruct} from "constructs"
 import * as cdk from "aws-cdk-lib"
 import * as Utils from "../Utils"
 import {CDKPermissionsUtils} from "./CDKPermissionsUtils"
 import {CDKResourcesUtils} from "./CDKResourcesUtils"
+import {CDKRecipes} from "./CDKRecipes"
 
 export class CDKUtils {
   constructor(
@@ -28,6 +29,13 @@ export class CDKUtils {
       return new CDKResourcesUtils({
         scope: this.scope,
       })
+    })())
+  }
+
+  _recipes: CDKRecipes | null = null
+  get recipes(): CDKRecipes {
+    return (this._recipes ||= (() => {
+      return new CDKRecipes()
     })())
   }
 
