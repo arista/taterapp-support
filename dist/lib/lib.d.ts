@@ -2,6 +2,7 @@ import { IConstruct, Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
+import * as cdk from 'aws-cdk-lib';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
 declare function appPkgDir(importMetaUrl: string): string;
@@ -85,6 +86,22 @@ declare class CachedResources<T> {
     get(name: string): T;
 }
 
+declare class TaterappResources extends CDKResourcesUtils {
+    constructor(props: {
+        scope: IConstruct;
+    });
+    getInfrastructureExport(name: string): string;
+    get cpArtifactsBucketName(): string;
+    get cpArtifactsBucket(): cdk.aws_s3.IBucket;
+    get privateBucketName(): string;
+    get privateBucket(): cdk.aws_s3.IBucket;
+    get publicBucketName(): string;
+    get publicBucket(): cdk.aws_s3.IBucket;
+    get codestarConnectionArn(): string;
+    get dockerhubAccountId(): string;
+    get dockerhubAccountPassword(): string;
+}
+
 declare class CDKRecipes {
     constructor();
     s3Bucket(scope: Construct, id: string, props: S3BucketProps): s3.IBucket;
@@ -107,8 +124,8 @@ declare class CDKUtils {
     get scope(): IConstruct;
     _permissions: CDKPermissionsUtils | null;
     get permissions(): CDKPermissionsUtils;
-    _resources: CDKResourcesUtils | null;
-    get resources(): CDKResourcesUtils;
+    _resources: TaterappResources | null;
+    get resources(): TaterappResources;
     _recipes: CDKRecipes | null;
     get recipes(): CDKRecipes;
     static runCDKCommand<P extends Object>({ appPkgDir, appClass, cdkCommand, stackProps, }: {

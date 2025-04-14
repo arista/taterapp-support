@@ -3,6 +3,7 @@ import * as cdk from "aws-cdk-lib"
 import * as Utils from "../Utils"
 import {CDKPermissionsUtils} from "./CDKPermissionsUtils"
 import {CDKResourcesUtils} from "./CDKResourcesUtils"
+import {TaterappResources} from "./TaterappResources"
 import {CDKRecipes} from "./CDKRecipes"
 
 export class CDKUtils {
@@ -23,10 +24,10 @@ export class CDKUtils {
     })())
   }
 
-  _resources: CDKResourcesUtils | null = null
-  get resources(): CDKResourcesUtils {
+  _resources: TaterappResources | null = null
+  get resources(): TaterappResources {
     return (this._resources ||= (() => {
-      return new CDKResourcesUtils({
+      return new TaterappResources({
         scope: this.scope,
       })
     })())

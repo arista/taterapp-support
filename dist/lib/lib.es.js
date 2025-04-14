@@ -108,7 +108,7 @@ function getPathToRoot(path) {
 }
 
 // src/lib/utils/cdk/CDKUtils.ts
-import * as cdk2 from "aws-cdk-lib";
+import * as cdk3 from "aws-cdk-lib";
 
 // src/lib/utils/cdk/CDKPermissionsUtils.ts
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -304,8 +304,66 @@ var CachedResources = class {
   }
 };
 
-// src/lib/utils/cdk/CDKRecipes.ts
+// src/lib/utils/cdk/TaterappResources.ts
 import * as cdk from "aws-cdk-lib";
+var TaterappResources = class extends CDKResourcesUtils {
+  constructor(props) {
+    super(props);
+  }
+  // Returns a value exported by the taterapp infrastructure CDK stack
+  getInfrastructureExport(name) {
+    return cdk.Fn.importValue(`taterapp-infrastructure-${name}`);
+  }
+  // Returns the token corresponding to the name of the S3 bucket used
+  // to hold codepipeline artifacts
+  get cpArtifactsBucketName() {
+    return this.getInfrastructureExport("bucketName-cp-artifacts");
+  }
+  get cpArtifactsBucket() {
+    return this.buckets.get(this.cpArtifactsBucketName);
+  }
+  // Returns the token corresponding to the name of the S3 bucket used
+  // to hold private data
+  get privateBucketName() {
+    return this.getInfrastructureExport("bucketName-private");
+  }
+  get privateBucket() {
+    return this.buckets.get(this.privateBucketName);
+  }
+  // Returns the token corresponding to the name of the S3 bucket used
+  // to hold public data, such as webapp assets
+  get publicBucketName() {
+    return this.getInfrastructureExport("bucketName-public");
+  }
+  get publicBucket() {
+    return this.buckets.get(this.publicBucketName);
+  }
+  // Returns the token corresponding to the codeconnection arn used to
+  // interact with github
+  get codestarConnectionArn() {
+    return this.ssmStringParams.get(
+      "/taterapps/common/build/codestar-connection-arn"
+    );
+  }
+  // Returns the token corresponding to the dockerhub login used to
+  // pull base images when building docker images.  Using a login
+  // helps with the dockerhub rate limits.
+  get dockerhubAccountId() {
+    return this.ssmStringParams.get(
+      "/taterapps/common/build/dockerhub-account/id"
+    );
+  }
+  // Returns the token corresponding to the dockerhub password for the
+  // dockerhubAccountId
+  get dockerhubAccountPassword() {
+    return this.ssmSecureStringParams.get(
+      "/taterapps/common/build/dockerhub-account/password"
+    );
+  }
+};
+
+// src/lib/utils/cdk/CDKRecipes.ts
+import * as cdk2 from "aws-cdk-lib";
 import * as s32 from "aws-cdk-lib/aws-s3";
 var CDKRecipes = class {
   constructor() {
@@ -333,11 +391,11 @@ var CDKRecipes = class {
           return {};
         case "delete-if-empty":
           return {
-            removalPolicy: cdk.RemovalPolicy.DESTROY
+            removalPolicy: cdk2.RemovalPolicy.DESTROY
           };
         case "empty-and-delete":
           return {
-            removalPolicy: cdk.RemovalPolicy.DESTROY,
+            removalPolicy: cdk2.RemovalPolicy.DESTROY,
             autoDeleteObjects: true
           };
         default:
@@ -370,7 +428,7 @@ var CDKUtils = class {
   _resources = null;
   get resources() {
     return this._resources ||= (() => {
-      return new CDKResourcesUtils({
+      return new TaterappResources({
         scope: this.scope
       });
     })();
@@ -420,8 +478,8 @@ var CDKUtils = class {
     const env = JSON.parse(notNull(process.env["CDK_PROPS"]));
     const stackProps = env;
     const stackName = getStackName({ stackProps });
-    const app = new cdk2.App();
-    const stack = new cdk2.Stack(app, stackName, {
+    const app = new cdk3.App();
+    const stack = new cdk3.Stack(app, stackName, {
       // This enables things like looking up hostnames.  Note that
       // these don't have to be defined as environment variables - CDK
       // will figure them out itself based on the AWS configuration
