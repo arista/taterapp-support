@@ -8,6 +8,7 @@
   "main": "dist/lib/lib.es.js",
   "module": "dist/lib/lib.es.js",
   "types": "dist/lib/lib.d.ts",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
