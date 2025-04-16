@@ -2,10 +2,12 @@ import { IConstruct, Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
+import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as cdk from 'aws-cdk-lib';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
 declare function appPkgDir(importMetaUrl: string): string;
+declare function getPathToRoot(path: string): string;
 declare function mapWithIndex<T, R>(items: Iterable<T>, f: (item: T, index: number) => R): Array<R>;
 declare function runShellCommand({ command, args, cwd, env, shell, }: {
     command: string;
@@ -24,6 +26,7 @@ declare const Utils_d_appPkgDir: typeof appPkgDir;
 declare const Utils_d_dateToYYYYMMDDHHMMSS: typeof dateToYYYYMMDDHHMMSS;
 declare const Utils_d_fileExists: typeof fileExists;
 declare const Utils_d_fileLastModified: typeof fileLastModified;
+declare const Utils_d_getPathToRoot: typeof getPathToRoot;
 declare const Utils_d_mapWithIndex: typeof mapWithIndex;
 declare const Utils_d_notNull: typeof notNull;
 declare const Utils_d_runShellCommand: typeof runShellCommand;
@@ -33,18 +36,10 @@ declare namespace Utils_d {
     Utils_d_dateToYYYYMMDDHHMMSS as dateToYYYYMMDDHHMMSS,
     Utils_d_fileExists as fileExists,
     Utils_d_fileLastModified as fileLastModified,
+    Utils_d_getPathToRoot as getPathToRoot,
     Utils_d_mapWithIndex as mapWithIndex,
     Utils_d_notNull as notNull,
     Utils_d_runShellCommand as runShellCommand,
-  };
-}
-
-declare function getPathToRoot(path: string): string;
-
-declare const LambdaUtils_d_getPathToRoot: typeof getPathToRoot;
-declare namespace LambdaUtils_d {
-  export {
-    LambdaUtils_d_getPathToRoot as getPathToRoot,
   };
 }
 
@@ -82,6 +77,8 @@ declare class CDKResourcesUtils {
     get ssmSecureStringParams(): CachedResources<string>;
     _s3Buckets: CachedResources<s3.IBucket> | null;
     get buckets(): CachedResources<s3.IBucket>;
+    _hostedZones: CachedResources<route53.IHostedZone> | null;
+    get hostedZones(): CachedResources<route53.IHostedZone>;
 }
 declare class CachedResources<T> {
     createFunc: (name: string) => T;
@@ -106,6 +103,8 @@ declare class TaterappResources extends CDKResourcesUtils {
     get codestarConnectionArn(): string;
     get dockerhubAccountId(): string;
     get dockerhubAccountPassword(): string;
+    get abramsonsInfoDomain(): string;
+    get abramsonsInfoHostedZone(): cdk.aws_route53.IHostedZone;
 }
 
 declare class CDKRecipes {
@@ -151,5 +150,5 @@ declare class CDKUtils {
     }): void;
 }
 
-export { CDKPermissionsUtils, CDKResourcesUtils, CDKUtils, LambdaUtils_d as LambdaUtils, Utils_d as Utils };
+export { CDKPermissionsUtils, CDKResourcesUtils, CDKUtils, Utils_d as Utils };
 export type { IamPermission, IamPermissions };

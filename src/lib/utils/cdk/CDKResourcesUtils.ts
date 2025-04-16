@@ -2,6 +2,7 @@ import {IConstruct} from "constructs"
 import * as ssm from "aws-cdk-lib/aws-ssm"
 import * as s3 from "aws-cdk-lib/aws-s3"
 import * as cdk from "aws-cdk-lib"
+import * as route53 from "aws-cdk-lib/aws-route53"
 
 export class CDKResourcesUtils {
   constructor(
@@ -44,6 +45,21 @@ export class CDKResourcesUtils {
     return (this._s3Buckets ||= (() => {
       return new CachedResources((name) => {
         return s3.Bucket.fromBucketName(this.scope, `bucket-${name}`, name)
+      })
+    })())
+  }
+
+  _hostedZones: CachedResources<route53.IHostedZone> | null = null
+  get hostedZones(): CachedResources<route53.IHostedZone> {
+    return (this._hostedZones ||= (() => {
+      return new CachedResources((name) => {
+        return route53.HostedZone.fromLookup(
+          this.scope,
+          "hosted-zone-${name}",
+          {
+            domainName: name.replace(/\./g, ""),
+          }
+        )
       })
     })())
   }

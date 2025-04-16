@@ -66,4 +66,12 @@ export class TaterappResources extends CDKResourcesUtils {
       "/taterapps/common/build/dockerhub-account/password"
     )
   }
+
+  get abramsonsInfoDomain() {
+    return "abramsons.info"
+  }
+
+  get abramsonsInfoHostedZone() {
+    return this.hostedZones.get(this.abramsonsInfoDomain)
+  }
 }

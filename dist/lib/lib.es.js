@@ -11,6 +11,7 @@ __export(Utils_exports, {
   dateToYYYYMMDDHHMMSS: () => dateToYYYYMMDDHHMMSS,
   fileExists: () => fileExists,
   fileLastModified: () => fileLastModified,
+  getPathToRoot: () => getPathToRoot,
   mapWithIndex: () => mapWithIndex,
   notNull: () => notNull,
   runShellCommand: () => runShellCommand
@@ -32,6 +33,18 @@ function notNull(val, str) {
 function appPkgDir(importMetaUrl) {
   const __filename = url.fileURLToPath(importMetaUrl);
   return notNull(packageDirectorySync({ cwd: __filename }));
+}
+function getPathToRoot(path) {
+  if (path.startsWith("/")) {
+    path = path.substring(1);
+  }
+  let ret = "";
+  for (const c of path) {
+    if (c === "/") {
+      ret += "../";
+    }
+  }
+  return ret;
 }
 function mapWithIndex(items, f) {
   const ret = [];
@@ -92,24 +105,6 @@ function dateToYYYYMMDDHHMMSS(d = /* @__PURE__ */ new Date()) {
   const m = d.getMinutes().toString().padStart(2, "0");
   const s = d.getSeconds().toString().padStart(2, "0");
   return `${yyyy}-${mm}-${dd}-${h}${m}${s}`;
-}
-
-// src/lib/utils/LambdaUtils.ts
-var LambdaUtils_exports = {};
-__export(LambdaUtils_exports, {
-  getPathToRoot: () => getPathToRoot
-});
-function getPathToRoot(path) {
-  if (path.startsWith("/")) {
-    path = path.substring(1);
-  }
-  let ret = "";
-  for (const c of path) {
-    if (c === "/") {
-      ret += "../";
-    }
-  }
-  return ret;
 }
 
 // src/lib/utils/cdk/CDKUtils.ts
@@ -262,6 +257,7 @@ var CDKPermissionsUtils = class {
 // src/lib/utils/cdk/CDKResourcesUtils.ts
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as route53 from "aws-cdk-lib/aws-route53";
 var CDKResourcesUtils = class {
   constructor(props) {
     this.props = props;
@@ -295,6 +291,20 @@ var CDKResourcesUtils = class {
     return this._s3Buckets ||= (() => {
       return new CachedResources((name) => {
         return s3.Bucket.fromBucketName(this.scope, `bucket-${name}`, name);
+      });
+    })();
+  }
+  _hostedZones = null;
+  get hostedZones() {
+    return this._hostedZones ||= (() => {
+      return new CachedResources((name) => {
+        return route53.HostedZone.fromLookup(
+          this.scope,
+          "hosted-zone-${name}",
+          {
+            domainName: name.replace(/\./g, "")
+          }
+        );
       });
     })();
   }
@@ -364,6 +374,12 @@ var TaterappResources = class extends CDKResourcesUtils {
     return this.ssmSecureStringParams.get(
       "/taterapps/common/build/dockerhub-account/password"
     );
+  }
+  get abramsonsInfoDomain() {
+    return "abramsons.info";
+  }
+  get abramsonsInfoHostedZone() {
+    return this.hostedZones.get(this.abramsonsInfoDomain);
   }
 };
 
@@ -500,7 +516,6 @@ var CDKUtils = class {
 export {
   CDKResourcesUtils,
   CDKUtils,
-  LambdaUtils_exports as LambdaUtils,
   Utils_exports as Utils
 };
 //# sourceMappingURL=lib.es.js.map
