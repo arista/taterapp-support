@@ -19,13 +19,11 @@ declare function runShellCommand({ command, args, cwd, env, shell, }: {
 declare function fileExists(path: string): boolean;
 declare function fileLastModified(path: string): number;
 declare function dateToYYYYMMDDHHMMSS(d?: Date): string;
-declare function getPathToRoot(path: string): string;
 
 declare const Utils_d_appPkgDir: typeof appPkgDir;
 declare const Utils_d_dateToYYYYMMDDHHMMSS: typeof dateToYYYYMMDDHHMMSS;
 declare const Utils_d_fileExists: typeof fileExists;
 declare const Utils_d_fileLastModified: typeof fileLastModified;
-declare const Utils_d_getPathToRoot: typeof getPathToRoot;
 declare const Utils_d_mapWithIndex: typeof mapWithIndex;
 declare const Utils_d_notNull: typeof notNull;
 declare const Utils_d_runShellCommand: typeof runShellCommand;
@@ -35,10 +33,18 @@ declare namespace Utils_d {
     Utils_d_dateToYYYYMMDDHHMMSS as dateToYYYYMMDDHHMMSS,
     Utils_d_fileExists as fileExists,
     Utils_d_fileLastModified as fileLastModified,
-    Utils_d_getPathToRoot as getPathToRoot,
     Utils_d_mapWithIndex as mapWithIndex,
     Utils_d_notNull as notNull,
     Utils_d_runShellCommand as runShellCommand,
+  };
+}
+
+declare function getPathToRoot(path: string): string;
+
+declare const LambdaUtils_d_getPathToRoot: typeof getPathToRoot;
+declare namespace LambdaUtils_d {
+  export {
+    LambdaUtils_d_getPathToRoot as getPathToRoot,
   };
 }
 
@@ -145,5 +151,5 @@ declare class CDKUtils {
     }): void;
 }
 
-export { CDKPermissionsUtils, CDKResourcesUtils, CDKUtils, Utils_d as Utils };
+export { CDKPermissionsUtils, CDKResourcesUtils, CDKUtils, LambdaUtils_d as LambdaUtils, Utils_d as Utils };
 export type { IamPermission, IamPermissions };

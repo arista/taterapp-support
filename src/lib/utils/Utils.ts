@@ -94,16 +94,3 @@ export function dateToYYYYMMDDHHMMSS(d: Date = new Date()): string {
   const s = d.getSeconds().toString().padStart(2, "0")
   return `${yyyy}-${mm}-${dd}-${h}${m}${s}`
 }
-
-export function getPathToRoot(path: string): string {
-  if (path.startsWith("/")) {
-    path = path.substring(1)
-  }
-  let ret = ""
-  for (const c of path) {
-    if (c === "/") {
-      ret += "../"
-    }
-  }
-  return ret
-}

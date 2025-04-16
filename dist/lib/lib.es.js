@@ -11,7 +11,6 @@ __export(Utils_exports, {
   dateToYYYYMMDDHHMMSS: () => dateToYYYYMMDDHHMMSS,
   fileExists: () => fileExists,
   fileLastModified: () => fileLastModified,
-  getPathToRoot: () => getPathToRoot,
   mapWithIndex: () => mapWithIndex,
   notNull: () => notNull,
   runShellCommand: () => runShellCommand
@@ -94,6 +93,12 @@ function dateToYYYYMMDDHHMMSS(d = /* @__PURE__ */ new Date()) {
   const s = d.getSeconds().toString().padStart(2, "0");
   return `${yyyy}-${mm}-${dd}-${h}${m}${s}`;
 }
+
+// src/lib/utils/LambdaUtils.ts
+var LambdaUtils_exports = {};
+__export(LambdaUtils_exports, {
+  getPathToRoot: () => getPathToRoot
+});
 function getPathToRoot(path) {
   if (path.startsWith("/")) {
     path = path.substring(1);
@@ -495,6 +500,7 @@ var CDKUtils = class {
 export {
   CDKResourcesUtils,
   CDKUtils,
+  LambdaUtils_exports as LambdaUtils,
   Utils_exports as Utils
 };
 //# sourceMappingURL=lib.es.js.map
