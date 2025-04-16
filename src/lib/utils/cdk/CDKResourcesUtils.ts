@@ -55,9 +55,9 @@ export class CDKResourcesUtils {
       return new CachedResources((name) => {
         return route53.HostedZone.fromLookup(
           this.scope,
-          "hosted-zone-${name}",
+          `hosted-zone-${name.replace(/\./g, "")}`,
           {
-            domainName: name.replace(/\./g, ""),
+            domainName: name,
           }
         )
       })
