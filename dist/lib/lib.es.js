@@ -390,7 +390,7 @@ var CDKRecipes = class {
   constructor() {
   }
   s3Bucket(scope, id, props) {
-    const { name, isPublic, isHostable, removePolicy } = props;
+    const { name, isPublic, isHostable, removePolicy, cors } = props;
     const access = isPublic ? {
       publicReadAccess: true,
       blockPublicAccess: new s32.BlockPublicAccess({
@@ -423,12 +423,30 @@ var CDKRecipes = class {
           return {};
       }
     })();
-    return new s32.Bucket(scope, id, {
+    const bucket = new s32.Bucket(scope, id, {
       bucketName: name,
       ...access,
       ...hostable,
       ...removal
     });
+    if (cors != null) {
+      switch (cors) {
+        case "allow-all-origins":
+          bucket.addCorsRule({
+            allowedMethods: [s32.HttpMethods.GET],
+            allowedOrigins: ["*"],
+            allowedHeaders: ["*"],
+            maxAge: 3e3
+          });
+          break;
+        case "none":
+          break;
+        default:
+          const unexpected = cors;
+          break;
+      }
+    }
+    return bucket;
   }
 };
 

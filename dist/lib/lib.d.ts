@@ -116,8 +116,10 @@ type S3BucketProps = {
     isPublic?: boolean;
     isHostable?: boolean;
     removePolicy?: S3BucketRemovePolicy;
+    cors?: S3BucketCorsConfig;
 };
 type S3BucketRemovePolicy = "no-delete" | "delete-if-empty" | "empty-and-delete";
+type S3BucketCorsConfig = "none" | "allow-all-origins";
 
 declare class CDKUtils {
     props: {
