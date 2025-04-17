@@ -14,6 +14,19 @@ export function notNull<T>(val: T | null | undefined, str?: string): T {
   return val
 }
 
+export function getPathToRoot(path: string): string {
+  if (path.startsWith("/")) {
+    path = path.substring(1)
+  }
+  let ret = ""
+  for (const c of path) {
+    if (c === "/") {
+      ret += "../"
+    }
+  }
+  return ret
+}
+
 // Returns the package directory for the file with the given
 // import.meta.url
 export function appPkgDir(importMetaUrl: string): string {
