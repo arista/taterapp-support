@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Fail on command failure, undefined variables, and piped command
+# failures, get the package directory
+set -euo pipefail
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+PKGDIR=${DIR}/../../
+
+cd ${PKGDIR}
+
+# Perform type-checking, and generate .d.ts files for rollup
+npm run tsc
+
+# Use generated .d.ts files to create dist/lib/lib.d.ts
+npm run rollup
+
+# Use esbuild to generate bundled dist/../*.js files to run in node
+# environments
+npm run esbuild
