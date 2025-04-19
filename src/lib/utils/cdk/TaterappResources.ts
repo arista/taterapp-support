@@ -51,8 +51,10 @@ export class TaterappResources extends CDKResourcesUtils {
     return this.vpcsById.get(this.vpcId)
   }
 
-  getSubnetIds(name: string):Array<string> {
-    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(",")
+  getSubnetIds(name: string): Array<string> {
+    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(
+      ","
+    )
   }
 
   // The ids of the vpc subnets open to the internet
@@ -61,7 +63,7 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get publicSubnets() {
-    return this.publicSubnetIds.map(id=>this.subnetsById.get(id))
+    return this.publicSubnetIds.map((id) => this.subnetsById.get(id))
   }
 
   // The ids of the vpc subnets blocked from internet ingress, but
@@ -71,7 +73,7 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get privateSubnets() {
-    return this.privateSubnetIds.map(id=>this.subnetsById.get(id))
+    return this.privateSubnetIds.map((id) => this.subnetsById.get(id))
   }
 
   // The ids of the vpc subnets blocked from the internet
@@ -80,7 +82,7 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get isolatedSubnets() {
-    return this.isolatedSubnetIds.map(id=>this.subnetsById.get(id))
+    return this.isolatedSubnetIds.map((id) => this.subnetsById.get(id))
   }
 
   // Returns the token corresponding to the codeconnection arn used to

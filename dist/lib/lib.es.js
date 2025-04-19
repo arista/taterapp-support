@@ -378,7 +378,9 @@ var TaterappResources = class extends CDKResourcesUtils {
     return this.vpcsById.get(this.vpcId);
   }
   getSubnetIds(name) {
-    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(",");
+    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(
+      ","
+    );
   }
   // The ids of the vpc subnets open to the internet
   get publicSubnetIds() {
@@ -429,6 +431,15 @@ var TaterappResources = class extends CDKResourcesUtils {
   }
   get abramsonsInfoHostedZone() {
     return this.hostedZones.get(this.abramsonsInfoDomain);
+  }
+  get dbEndpointAddress() {
+    return this.getInfrastructureExport("db:endpoint:address");
+  }
+  get dbEndpointPort() {
+    return this.getInfrastructureExport("db:endpoint:port");
+  }
+  get dbAdminCredentialsSecretName() {
+    return this.getInfrastructureExport("db:credentials:admin:secret-name");
   }
 };
 
