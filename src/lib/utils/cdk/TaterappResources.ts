@@ -115,4 +115,16 @@ export class TaterappResources extends CDKResourcesUtils {
   get abramsonsInfoHostedZone() {
     return this.hostedZones.get(this.abramsonsInfoDomain)
   }
+
+  get dbEndpointAddress() {
+    return this.getInfrastructureExport("db:endpoint:address")
+  }
+
+  get dbEndpointPort() {
+    return this.getInfrastructureExport("db:endpoint:port")
+  }
+
+  get dbAdminCredentialsSecretName() {
+    return this.getInfrastructureExport("db:credentials:admin:secret-name")
+  }
 }
