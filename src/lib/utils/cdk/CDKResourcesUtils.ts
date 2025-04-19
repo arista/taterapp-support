@@ -3,6 +3,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm"
 import * as s3 from "aws-cdk-lib/aws-s3"
 import * as cdk from "aws-cdk-lib"
 import * as route53 from "aws-cdk-lib/aws-route53"
+import * as ec2 from "aws-cdk-lib/aws-ec2"
 
 export class CDKResourcesUtils {
   constructor(
@@ -60,6 +61,24 @@ export class CDKResourcesUtils {
             domainName: name,
           }
         )
+      })
+    })())
+  }
+
+  _vpcsById: CachedResources<ec2.IVpc> | null = null
+  get vpcsById(): CachedResources<ec2.IVpc> {
+    return (this._vpcsById ||= (() => {
+      return new CachedResources((name) => {
+        return ec2.Vpc.fromLookup(this.scope, `vpc-byId-${name}`, {vpcId: name})
+      })
+    })())
+  }
+
+  _subnetsById: CachedResources<ec2.ISubnet> | null = null
+  get subnetsById(): CachedResources<ec2.ISubnet> {
+    return (this._subnetsById ||= (() => {
+      return new CachedResources((name) => {
+        return ec2.Subnet.fromSubnetId(this.scope, `subnet-byId-${name}`, name)
       })
     })())
   }

@@ -3,6 +3,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
 import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as cdk from 'aws-cdk-lib';
 
 declare function notNull<T>(val: T | null | undefined, str?: string): T;
@@ -79,6 +80,10 @@ declare class CDKResourcesUtils {
     get buckets(): CachedResources<s3.IBucket>;
     _hostedZones: CachedResources<route53.IHostedZone> | null;
     get hostedZones(): CachedResources<route53.IHostedZone>;
+    _vpcsById: CachedResources<ec2.IVpc> | null;
+    get vpcsById(): CachedResources<ec2.IVpc>;
+    _subnetsById: CachedResources<ec2.ISubnet> | null;
+    get subnetsById(): CachedResources<ec2.ISubnet>;
 }
 declare class CachedResources<T> {
     createFunc: (name: string) => T;
@@ -100,6 +105,15 @@ declare class TaterappResources extends CDKResourcesUtils {
     get privateBucket(): cdk.aws_s3.IBucket;
     get publicBucketName(): string;
     get publicBucket(): cdk.aws_s3.IBucket;
+    get vpcId(): string;
+    get vpc(): cdk.aws_ec2.IVpc;
+    getSubnetIds(name: string): Array<string>;
+    get publicSubnetIds(): string[];
+    get publicSubnets(): cdk.aws_ec2.ISubnet[];
+    get privateSubnetIds(): string[];
+    get privateSubnets(): cdk.aws_ec2.ISubnet[];
+    get isolatedSubnetIds(): string[];
+    get isolatedSubnets(): cdk.aws_ec2.ISubnet[];
     get codestarConnectionArn(): string;
     get dockerhubAccountId(): string;
     get dockerhubAccountPassword(): string;
