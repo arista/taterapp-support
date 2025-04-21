@@ -82,8 +82,6 @@ declare class CDKResourcesUtils {
     get hostedZones(): CachedResources<route53.IHostedZone>;
     _subnetsById: CachedResources<ec2.ISubnet> | null;
     get subnetsById(): CachedResources<ec2.ISubnet>;
-    _securityGroupsById: CachedResources<ec2.ISecurityGroup> | null;
-    get securityGroupsById(): CachedResources<ec2.ISecurityGroup>;
 }
 declare class CachedResources<T> {
     createFunc: (name: string) => T;
@@ -125,7 +123,8 @@ declare class TaterappResources extends CDKResourcesUtils {
     get dbEndpointPort(): number;
     get dbAdminCredentialsSecretName(): string;
     get dbSecurityGroupId(): string;
-    get dbSecurityGroup(): cdk.aws_ec2.ISecurityGroup;
+    _dbSecurityGroup: ec2.ISecurityGroup | null;
+    get dbSecurityGroup(): ec2.ISecurityGroup;
 }
 
 declare class CDKRecipes {

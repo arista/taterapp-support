@@ -146,7 +146,10 @@ export class TaterappResources extends CDKResourcesUtils {
     return this.getInfrastructureExport("db:security-group-id")
   }
 
-  get dbSecurityGroup() {
-    return this.securityGroupsById.get(this.dbSecurityGroupId)
+  _dbSecurityGroup:ec2.ISecurityGroup|null = null
+  get dbSecurityGroup():ec2.ISecurityGroup {
+    return this._dbSecurityGroup ||= (()=>{
+      return ec2.SecurityGroup.fromSecurityGroupId(this.scope, "dbSecurityGroup", this.dbSecurityGroupId)
+    })()
   }
 }

@@ -317,18 +317,6 @@ var CDKResourcesUtils = class {
       });
     })();
   }
-  _securityGroupsById = null;
-  get securityGroupsById() {
-    return this._securityGroupsById ||= (() => {
-      return new CachedResources((name) => {
-        return ec2.SecurityGroup.fromSecurityGroupId(
-          this.scope,
-          `sg-byId-${name}`,
-          name
-        );
-      });
-    })();
-  }
 };
 var CachedResources = class {
   constructor(createFunc) {
@@ -459,8 +447,11 @@ var TaterappResources = class extends CDKResourcesUtils {
   get dbSecurityGroupId() {
     return this.getInfrastructureExport("db:security-group-id");
   }
+  _dbSecurityGroup = null;
   get dbSecurityGroup() {
-    return this.securityGroupsById.get(this.dbSecurityGroupId);
+    return this._dbSecurityGroup ||= (() => {
+      return ec22.SecurityGroup.fromSecurityGroupId(this.scope, "dbSecurityGroup", this.dbSecurityGroupId);
+    })();
   }
 };
 
