@@ -129,4 +129,12 @@ export class TaterappResources extends CDKResourcesUtils {
   get dbAdminCredentialsSecretName() {
     return this.getInfrastructureExport("db:credentials:admin:secret-name")
   }
+
+  get dbSecurityGroupId() {
+    return this.getInfrastructureExport("db:security-group-id")
+  }
+
+  get dbSecurityGroup() {
+    return this.securityGroupsById.get(this.dbSecurityGroupId)
+  }
 }

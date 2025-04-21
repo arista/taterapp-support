@@ -82,6 +82,15 @@ export class CDKResourcesUtils {
       })
     })())
   }
+
+  _securityGroupsById: CachedResources<ec2.ISecurityGroup> | null = null
+  get securityGroupsById(): CachedResources<ec2.ISecurityGroup> {
+    return (this._securityGroupsById ||= (() => {
+      return new CachedResources((name) => {
+        return ec2.SecurityGroup.fromSecurityGroupId(this.scope, `sg-byId-${name}`, name)
+      })
+    })())
+  }
 }
 
 class CachedResources<T> {

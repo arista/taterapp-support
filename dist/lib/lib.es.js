@@ -325,6 +325,14 @@ var CDKResourcesUtils = class {
       });
     })();
   }
+  _securityGroupsById = null;
+  get securityGroupsById() {
+    return this._securityGroupsById ||= (() => {
+      return new CachedResources((name) => {
+        return ec2.SecurityGroup.fromSecurityGroupId(this.scope, `sg-byId-${name}`, name);
+      });
+    })();
+  }
 };
 var CachedResources = class {
   constructor(createFunc) {
@@ -440,6 +448,12 @@ var TaterappResources = class extends CDKResourcesUtils {
   }
   get dbAdminCredentialsSecretName() {
     return this.getInfrastructureExport("db:credentials:admin:secret-name");
+  }
+  get dbSecurityGroupId() {
+    return this.getInfrastructureExport("db:security-group-id");
+  }
+  get dbSecurityGroup() {
+    return this.securityGroupsById.get(this.dbSecurityGroupId);
   }
 };
 
