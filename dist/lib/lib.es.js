@@ -378,11 +378,12 @@ var TaterappResources = class extends CDKResourcesUtils {
     })();
   }
   get vpcAzs() {
-    return this.getInfrastructureExport("vpc:azs").split(",");
+    return cdk.Fn.split(",", this.getInfrastructureExport("vpc:azs"));
   }
   getSubnetIds(name) {
-    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(
-      ","
+    return cdk.Fn.split(
+      ",",
+      this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`)
     );
   }
   // The ids of the vpc subnets open to the internet
@@ -439,7 +440,7 @@ var TaterappResources = class extends CDKResourcesUtils {
     return this.getInfrastructureExport("db:endpoint:address");
   }
   get dbEndpointPort() {
-    return parseInt(this.getInfrastructureExport("db:endpoint:port"));
+    return cdk.Token.asNumber(this.getInfrastructureExport("db:endpoint:port"));
   }
   get dbAdminCredentialsSecretName() {
     return this.getInfrastructureExport("db:credentials:admin:secret-name");
@@ -450,7 +451,11 @@ var TaterappResources = class extends CDKResourcesUtils {
   _dbSecurityGroup = null;
   get dbSecurityGroup() {
     return this._dbSecurityGroup ||= (() => {
-      return ec22.SecurityGroup.fromSecurityGroupId(this.scope, "dbSecurityGroup", this.dbSecurityGroupId);
+      return ec22.SecurityGroup.fromSecurityGroupId(
+        this.scope,
+        "dbSecurityGroup",
+        this.dbSecurityGroupId
+      );
     })();
   }
 };

@@ -60,12 +60,13 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get vpcAzs() {
-    return this.getInfrastructureExport("vpc:azs").split(",")
+    return cdk.Fn.split(",", this.getInfrastructureExport("vpc:azs"))
   }
 
   getSubnetIds(name: string): Array<string> {
-    return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(
-      ","
+    return cdk.Fn.split(
+      ",",
+      this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`)
     )
   }
 
@@ -135,7 +136,7 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get dbEndpointPort() {
-    return parseInt(this.getInfrastructureExport("db:endpoint:port"))
+    return cdk.Token.asNumber(this.getInfrastructureExport("db:endpoint:port"))
   }
 
   get dbAdminCredentialsSecretName() {
@@ -146,10 +147,14 @@ export class TaterappResources extends CDKResourcesUtils {
     return this.getInfrastructureExport("db:security-group-id")
   }
 
-  _dbSecurityGroup:ec2.ISecurityGroup|null = null
-  get dbSecurityGroup():ec2.ISecurityGroup {
-    return this._dbSecurityGroup ||= (()=>{
-      return ec2.SecurityGroup.fromSecurityGroupId(this.scope, "dbSecurityGroup", this.dbSecurityGroupId)
-    })()
+  _dbSecurityGroup: ec2.ISecurityGroup | null = null
+  get dbSecurityGroup(): ec2.ISecurityGroup {
+    return (this._dbSecurityGroup ||= (() => {
+      return ec2.SecurityGroup.fromSecurityGroupId(
+        this.scope,
+        "dbSecurityGroup",
+        this.dbSecurityGroupId
+      )
+    })())
   }
 }
