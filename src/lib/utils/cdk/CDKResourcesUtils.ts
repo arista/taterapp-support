@@ -65,15 +65,6 @@ export class CDKResourcesUtils {
     })())
   }
 
-  _vpcsById: CachedResources<ec2.IVpc> | null = null
-  get vpcsById(): CachedResources<ec2.IVpc> {
-    return (this._vpcsById ||= (() => {
-      return new CachedResources((name) => {
-        return ec2.Vpc.fromLookup(this.scope, `vpc-byId-${name}`, {vpcId: name})
-      })
-    })())
-  }
-
   _subnetsById: CachedResources<ec2.ISubnet> | null = null
   get subnetsById(): CachedResources<ec2.ISubnet> {
     return (this._subnetsById ||= (() => {
@@ -87,7 +78,11 @@ export class CDKResourcesUtils {
   get securityGroupsById(): CachedResources<ec2.ISecurityGroup> {
     return (this._securityGroupsById ||= (() => {
       return new CachedResources((name) => {
-        return ec2.SecurityGroup.fromSecurityGroupId(this.scope, `sg-byId-${name}`, name)
+        return ec2.SecurityGroup.fromSecurityGroupId(
+          this.scope,
+          `sg-byId-${name}`,
+          name
+        )
       })
     })())
   }

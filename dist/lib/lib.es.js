@@ -309,14 +309,6 @@ var CDKResourcesUtils = class {
       });
     })();
   }
-  _vpcsById = null;
-  get vpcsById() {
-    return this._vpcsById ||= (() => {
-      return new CachedResources((name) => {
-        return ec2.Vpc.fromLookup(this.scope, `vpc-byId-${name}`, { vpcId: name });
-      });
-    })();
-  }
   _subnetsById = null;
   get subnetsById() {
     return this._subnetsById ||= (() => {
@@ -329,7 +321,11 @@ var CDKResourcesUtils = class {
   get securityGroupsById() {
     return this._securityGroupsById ||= (() => {
       return new CachedResources((name) => {
-        return ec2.SecurityGroup.fromSecurityGroupId(this.scope, `sg-byId-${name}`, name);
+        return ec2.SecurityGroup.fromSecurityGroupId(
+          this.scope,
+          `sg-byId-${name}`,
+          name
+        );
       });
     })();
   }
@@ -346,6 +342,7 @@ var CachedResources = class {
 
 // src/lib/utils/cdk/TaterappResources.ts
 import * as cdk from "aws-cdk-lib";
+import * as ec22 from "aws-cdk-lib/aws-ec2";
 var TaterappResources = class extends CDKResourcesUtils {
   constructor(props) {
     super(props);
@@ -382,8 +379,18 @@ var TaterappResources = class extends CDKResourcesUtils {
   get vpcId() {
     return this.getInfrastructureExport("vpc:id");
   }
+  _vpc = null;
   get vpc() {
-    return this.vpcsById.get(this.vpcId);
+    return this._vpc ||= (() => {
+      return ec22.Vpc.fromVpcAttributes(this.scope, `vpc-byId-${this.vpcId}`, {
+        vpcId: this.vpcId,
+        availabilityZones: this.vpcAzs,
+        privateSubnetIds: this.privateSubnetIds
+      });
+    })();
+  }
+  get vpcAzs() {
+    return this.getInfrastructureExport("vpc:azs").split(",");
   }
   getSubnetIds(name) {
     return this.getInfrastructureExport(`vpc:subnets:${name}:subnetIds`).split(

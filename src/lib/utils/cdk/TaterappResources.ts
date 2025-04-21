@@ -1,6 +1,7 @@
 import {CDKResourcesUtils} from "./CDKResourcesUtils"
 import {IConstruct} from "constructs"
 import * as cdk from "aws-cdk-lib"
+import * as ec2 from "aws-cdk-lib/aws-ec2"
 
 export class TaterappResources extends CDKResourcesUtils {
   constructor(props: {scope: IConstruct}) {
@@ -47,8 +48,19 @@ export class TaterappResources extends CDKResourcesUtils {
     return this.getInfrastructureExport("vpc:id")
   }
 
-  get vpc() {
-    return this.vpcsById.get(this.vpcId)
+  _vpc: ec2.IVpc | null = null
+  get vpc(): ec2.IVpc {
+    return (this._vpc ||= (() => {
+      return ec2.Vpc.fromVpcAttributes(this.scope, `vpc-byId-${this.vpcId}`, {
+        vpcId: this.vpcId,
+        availabilityZones: this.vpcAzs,
+        privateSubnetIds: this.privateSubnetIds,
+      })
+    })())
+  }
+
+  get vpcAzs() {
+    return this.getInfrastructureExport("vpc:azs").split(",")
   }
 
   getSubnetIds(name: string): Array<string> {

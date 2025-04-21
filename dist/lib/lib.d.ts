@@ -80,8 +80,6 @@ declare class CDKResourcesUtils {
     get buckets(): CachedResources<s3.IBucket>;
     _hostedZones: CachedResources<route53.IHostedZone> | null;
     get hostedZones(): CachedResources<route53.IHostedZone>;
-    _vpcsById: CachedResources<ec2.IVpc> | null;
-    get vpcsById(): CachedResources<ec2.IVpc>;
     _subnetsById: CachedResources<ec2.ISubnet> | null;
     get subnetsById(): CachedResources<ec2.ISubnet>;
     _securityGroupsById: CachedResources<ec2.ISecurityGroup> | null;
@@ -108,7 +106,9 @@ declare class TaterappResources extends CDKResourcesUtils {
     get publicBucketName(): string;
     get publicBucket(): cdk.aws_s3.IBucket;
     get vpcId(): string;
-    get vpc(): cdk.aws_ec2.IVpc;
+    _vpc: ec2.IVpc | null;
+    get vpc(): ec2.IVpc;
+    get vpcAzs(): string[];
     getSubnetIds(name: string): Array<string>;
     get publicSubnetIds(): string[];
     get publicSubnets(): cdk.aws_ec2.ISubnet[];
