@@ -122,7 +122,7 @@ declare class TaterappResources extends CDKResourcesUtils {
     get abramsonsInfoDomain(): string;
     get abramsonsInfoHostedZone(): cdk.aws_route53.IHostedZone;
     get dbEndpointAddress(): string;
-    get dbEndpointPort(): string;
+    get dbEndpointPort(): number;
     get dbAdminCredentialsSecretName(): string;
     get dbSecurityGroupId(): string;
     get dbSecurityGroup(): cdk.aws_ec2.ISecurityGroup;

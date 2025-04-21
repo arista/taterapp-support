@@ -123,7 +123,7 @@ export class TaterappResources extends CDKResourcesUtils {
   }
 
   get dbEndpointPort() {
-    return this.getInfrastructureExport("db:endpoint:port")
+    return parseInt(this.getInfrastructureExport("db:endpoint:port"))
   }
 
   get dbAdminCredentialsSecretName() {
